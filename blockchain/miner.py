@@ -22,9 +22,11 @@ def proof_of_work(last_proof):
 
     start = timer()
 
+    block_string = hashlib.sha256(f'{last_proof}'.encode()).hexdigest()
     print("Searching for next proof")
     proof = 0
-    #  TODO: Your code here
+    while not valid_proof(block_string, proof):
+        proof = random.random()
 
     print("Proof found: " + str(proof) + " in " + str(timer() - start))
     return proof
@@ -39,8 +41,9 @@ def valid_proof(last_hash, proof):
     IE:  last_hash: ...AE912345, new hash 12345E88...
     """
 
-    # TODO: Your code here!
-    pass
+    guess = f'{proof}'.encode()
+    guess_hash = hashlib.sha256(guess).hexdigest()
+    return guess_hash[:5] == str(last_hash)[-5:]
 
 
 if __name__ == '__main__':
@@ -53,7 +56,7 @@ if __name__ == '__main__':
     coins_mined = 0
 
     # Load or create ID
-    f = open("my_id.txt", "r")
+    f = open("blockchain\my_id.txt", "r")
     id = f.read()
     print("ID is", id)
     f.close()
